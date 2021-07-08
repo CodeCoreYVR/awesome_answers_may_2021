@@ -53,6 +53,16 @@ class Question < ApplicationRecord
     # takes a name and a lambda as a callback
     #This can also be created by private method below
     scope :recent_ten, lambda { order("created_at DESC").limit(10) }
+
+    #Exercise: Searching Questions
+    #$Implement a seat=rch method to do a wildcard search on both title and body
+
+    # def self.search(query)
+    #     where("title ILIKE ? OR body ILIKE ?", "%#{query}%", "%#{query}%")
+    # end
+
+    #Above is equivalent to:
+    scope(:search, -> (query){ where("title ILIKE ? OR body ILIKE ?", "%#{query}%", "%#{query}%")})
     
     private
 
