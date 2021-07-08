@@ -11,13 +11,28 @@ class Question < ApplicationRecord
     #Instead, run: rails db:rollback
     #OR create a new migration to make changes to the existing table
 
+    #--------------------Naming Conventions----------------------------->
+    # A model is always singular and database tables are always plural
+
     #---------------------CALLBACKS----------------------------------->
     after_initialize :set_defaults
+    #this callback is executed after you have q = Question.create(....setting attributes...)
+    #if you give a value for the specific attribute, it will be set to that value, otherwise
+    #this method will set the value to the default value
+
     before_save :capitalize_title
+    #q = Question.create(title:"hello", body:"World", view_count:2)
+    #before_save will turn title into "Hello" before saving into the database
 
     #--------------------VALIDATIONS------------------------------------>
+    # Create validations by using the 'validates' method
+    # The arguments are (in order):
+    # - A column name as a symbol 
+    # - Named arguments, corresponding to the validation rules
 
     validates :title, presence: {message: "title must be provided"}
+    #passing a default message
+    #alternative for passing a message would be to use .errors.full_messages in console
     # validates :title, uniqueness: true
 
     #Below means that the title must be unique for a question in relation to its body
@@ -30,15 +45,29 @@ class Question < ApplicationRecord
     validates :view_count, numericality: {greater_than_or_equal_to: 0}
 
     #---------------CUSTOM NO-MONKEYS VALIDATION-------------------------->
-    validate :no_monkey #we use the "validate instead of "validates" for custom validations
+    validate :no_monkey #we use the "validate" instead of "validates" for custom validations
 
+    #SCOPE with lambda
+    # Scopes are such a commonly used feature, that
+    # there's another way to create them quicker. It 
+    # takes a name and a lambda as a callback
+    #This can also be created by private method below
     scope :recent_ten, lambda { order("created_at DESC").limit(10) }
     
     private
 
     def no_monkey
         if body&.downcase&.include?("monkey")
+            # &. is the safe navigation operator. It's used
+            # like the . operator to call methods on an object.
+            # If the method doesn't exist for the object, 'nil'
+            # will be returned instead of getting an error
             self.errors.add(:body, "Must not have monkey")
+            # To make a record invalid. You must add a 
+            # validation error using the 'errors' 'add' method
+            # It's arguments (in order):
+            # - A symbol for the invalid column
+            # - An error message as a string
         end
     end
 
@@ -49,6 +78,10 @@ class Question < ApplicationRecord
     def capitalize_title
         self.title.capitalize!
     end
+
+    # Create a scope with a class method
+    # https://edgeguides.rubyonrails.org/active_record_querying.html#scopes
+    # We used the Lambda scope above instead of this method below
 
     # def self.recent_ten
     #     order("created_at DESC")
