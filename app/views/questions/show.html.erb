@@ -4,9 +4,13 @@
 <div>
     created_by: <%= @question.user&.full_name || "Deleted" %>
 </div>
-<p>Created at:<%= @question.created_at %></p>
-<%= link_to 'Edit', edit_question_path(@question) %>
-<%= link_to 'Delete', question_path(@question), method: :delete, data: { confirm: "Are you sure?" } %>
+<p>Asked: <%= @question.created_at %></p>
+<% if can? :crud, @question %>
+    <%= link_to 'Edit', edit_question_path(@question) %>
+<% end %>
+<% if can? :crud, @question %>
+    <%= link_to 'Delete', question_path(@question), method: :delete, data: { confirm: "Are you sure?" } %>
+<% end %>
 <hr/>
 
 <h3>Do you have an Answer?</h3>
@@ -35,15 +39,17 @@
         Answered by:
         <%= answer.user&.full_name || "Deleted" %>
     </div>
-    <%= link_to(
-        "Delete",
-        question_answer_path(@question, answer),
-        method: :delete,
-        data: {
-            confirm: "Are you sure?"
-        },
-        class: "some-css-class")
-    %>
+    <% if can? :crud, answer %>
+        <%= link_to(
+            "Delete",
+            question_answer_path(@question, answer),
+            method: :delete,
+            data: {
+                confirm: "Are you sure?"
+            },
+            class: "some-css-class")
+        %>
+    <% end %>
     <hr/>
 <% end %>
 

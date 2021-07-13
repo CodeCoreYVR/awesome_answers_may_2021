@@ -1,6 +1,7 @@
 class QuestionsController < ApplicationController
     before_action :authenticate_user!, except: [:index, :show] #confirm the user exists prior to creating or deleting a question
     before_action :find_question, only: [:show, :edit, :update, :destroy]
+    before_action :authorize_user!, only: [:edit, :update, :destroy]
 
     def index
         @questions = Question.all.order(created_at: :desc) 
@@ -57,6 +58,10 @@ class QuestionsController < ApplicationController
 
     def find_question
         @question = Question.find params[:id]
+    end
+
+    def authorize_user!
+        redirect_to root_path, alert: 'Not authorized! please try again' unless can?(:crud, @question)
     end
 
 end

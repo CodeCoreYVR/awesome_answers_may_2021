@@ -1,6 +1,7 @@
 class AnswersController < ApplicationController
     #This file was generated with: rails g controller answers
     before_action :authenticate_user!#called before both create and destroy
+    #before_action :authorize_user, only: [:edit, :update, :destroy]
 
     def create
         # /questions/:question_id/answers(.:format) -> Route for quick reference
@@ -21,7 +22,12 @@ class AnswersController < ApplicationController
     def destroy
         @question = Question.find params[:question_id]
         @answer = Answer.find params[:id]
-        @answer.destroy
-        redirect_to question_path(@question), notice: 'Answer Deleted'
+
+        if can?(:crud, @answer)
+            @answer.destroy
+            redirect_to question_path(@question), notice: 'Answer Deleted'
+        else
+            redirect_to root_path, alert: "Not authorized!"
+        end
     end
 end
