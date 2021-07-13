@@ -1,5 +1,6 @@
 class AnswersController < ApplicationController
     #This file was generated with: rails g controller answers
+    before_action :authenticate_user!#called before both create and destroy
 
     def create
         # /questions/:question_id/answers(.:format) -> Route for quick reference
@@ -7,6 +8,8 @@ class AnswersController < ApplicationController
         answer_params = params.require(:answer).permit(:body)
         @answer = Answer.new answer_params
         @answer.question = @question
+        @answer.user = current_user #update controller with the current_user
+        
         @answer.save
         if @answer.persisted?
             redirect_to question_path(@question), notice: 'Answer created!' 

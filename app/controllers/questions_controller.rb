@@ -1,4 +1,5 @@
 class QuestionsController < ApplicationController
+    before_action :authenticate_user!, except: [:index, :show] #confirm the user exists prior to creating or deleting a question
     before_action :find_question, only: [:show, :edit, :update, :destroy]
 
     def index
@@ -22,6 +23,7 @@ class QuestionsController < ApplicationController
 
     def create
         @question = Question.new question_params
+        @question.user = current_user #will need to call this in the view to display the author of the question or simply use current_user in the view
 
         if @question.save
             flash[:notice] = "Question created successfully!"
