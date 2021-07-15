@@ -28,6 +28,24 @@ class JobPostsController < ApplicationController
         @job_posts = JobPost.all.order(created_at: :desc)
     end
 
+    def edit
+
+    end
+
+    def update
+        @job_post = JobPost.find params[:id]
+        @job_post.update params.require(:job_post)
+        .permit(
+            :title,
+            :description,
+            :location,
+            :min_salary,
+            :max_salary,
+            :company_name
+        )
+        redirect_to @job_post
+    end
+
     def destroy
         job_post = JobPost.find params[:id]
         job_post.destroy

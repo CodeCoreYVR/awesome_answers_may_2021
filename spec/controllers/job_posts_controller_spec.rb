@@ -139,6 +139,52 @@ RSpec.describe JobPostsController, type: :controller do
             expect(assigns(:job_posts)).to eq([job_post_3, job_post_2, job_post_1])
         end
     end
+
+    describe "#edit" do
+        it "renders the edit template" do
+            #GIVEN
+            job_post = FactoryBot.create(:job_post)
+            #WHEN
+            get(:edit, params: { id: job_post.id })
+            #THEN
+            expect(response).to render_template :edit
+        end
+    end
+
+    describe "#update" do
+        before do 
+            #this code will be run first before every single test within this describe block
+            #GIVEN
+            @job_post = FactoryBot.create(:job_post)
+        end
+
+        context "with valid parameters" do
+            it "updates the job post record with new attributes" do
+                #part of GIVEN
+                new_title = "#{@job_post.title} Plus some changes!"
+                #WHEN
+                patch(:update, params: {id: @job_post.id, job_post: { title: new_title }})
+                #THEN
+                expect(@job_post.reload.title).to eq new_title
+            end
+
+            it "redirects to the show page of updated job post" do
+                new_title = "#{@job_post.title} Plus some changes!"
+                patch(:update, params: {id: @job_post.id, job_post: { title: new_title }})
+                expect(response).to redirect_to(@job_post)
+            end
+        end
+
+        context "with invalid parameters" do
+
+            it "should not update the job post record" do
+              patch(:update, params: { id: @job_post.id, job_post: { title: nil }})#We will grab the job_post and make it invalid
+              job_post_after_update = JobPost.find(@job_post.id)
+              expect(job_post_after_update.title).to eq @job_post.title
+            end
+      
+          end
+    end
     
     describe "#destroy" do
         before do 
