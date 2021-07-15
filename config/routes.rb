@@ -75,4 +75,5 @@ Rails.application.routes.draw do
   #when using a singular resource it will generate all the routes for us but without the 'id' option
   #there is no route generated that will have an :id wildcard at the end if use singular 'resource'
 
+  resources :job_posts, only: [:new]
 end
