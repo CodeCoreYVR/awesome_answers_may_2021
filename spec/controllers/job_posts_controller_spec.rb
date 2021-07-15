@@ -31,4 +31,42 @@ RSpec.describe JobPostsController, type: :controller do
         end
     end
 
+    describe "#create" do
+        def valid_request
+            post(:create, params: { job_post: FactoryBot.attributes_for(:job_post)})
+        end
+        it "creates a job post in the database" do
+            #GIVEN
+            count_before = JobPost.count #the numbner of all records in the JobPost table
+
+            #WHEN
+            valid_request
+            #mocking a post request to the create method. The params of the request will look something like this:
+            # job_post: {
+            #     title: 'senior dev',
+            #     description: 'lots of pay',
+            #     location: 'remote',
+            #     min_salary: 500_000,
+            #     max_salary: 1_000_000
+            # }
+
+            #THEN
+            count_after = JobPost.count
+            expect(count_after).to(eq(count_before + 1))
+        end
+
+        it "redirects us to the show page for the new instance of job post" do
+            #GIVEN we are creating a new job post
+
+            #WHEN
+            valid_request
+
+            #THEN
+            job_post = JobPost.last
+            expect(response).to(redirect_to(job_post_url(job_post.id)))
+            #we are using job_post_url that needs an id to redirect to a particular show page
+
+        end
+    end
+
 end
