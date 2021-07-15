@@ -140,5 +140,28 @@ RSpec.describe JobPostsController, type: :controller do
         end
     end
     
+    describe "#destroy" do
+        before do 
+            #this code will be run first before every single test within this describe block
+            #GIVEN
+            @job_post = FactoryBot.create(:job_post)
+            #WHEN
+            delete(:destroy, params: { id: @job_post.id })
+        end
+
+        it "should remove a job post from the database" do
+            #THEN
+            expect(JobPost.find_by(id: @job_post.id)).to be(nil)
+        end
+
+        it "redirects to the job posts index" do
+            #THEN
+            expect(response).to redirect_to(job_posts_path)
+        end
+
+        it "sets a flash message that it was deleted" do
+            expect(flash[:danger]).to be #asserts that the danger property of the flash object exists
+        end
+    end
 
 end
