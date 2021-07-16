@@ -225,34 +225,50 @@ RSpec.describe JobPostsController, type: :controller do
                 job_post_after_update = JobPost.find(@job_post.id)
                 expect(job_post_after_update.title).to eq @job_post.title
                 end
-        
             end
         end
     end
     
     describe "#destroy" do
         context "with user signed in" do
-            before do 
-                session[:user_id] = FactoryBot.create(:user)
-                #this code will be run first before every single test within this describe block
-                #GIVEN
-                @job_post = FactoryBot.create(:job_post)
-                #WHEN
-                delete(:destroy, params: { id: @job_post.id })
-            end
+            context "as owner" do
+                before do
+                    current_user = FactoryBot.create(:user)
+                    session[:user_id] = current_user.id #this is now the signed in user
+                    #this code will be run first before every single test within this describe block
+                    #GIVEN
+                    @job_post = FactoryBot.create(:job_post, user: current_user)
+                    #WHEN
+                    delete(:destroy, params: { id: @job_post.id })
+                end
 
-            it "should remove a job post from the database" do
-                #THEN
-                expect(JobPost.find_by(id: @job_post.id)).to be(nil)
-            end
+                it "should remove a job post from the database" do
+                    #THEN
+                    expect(JobPost.find_by(id: @job_post.id)).to be(nil)
+                end
 
-            it "redirects to the job posts index" do
-                #THEN
-                expect(response).to redirect_to(job_posts_path)
-            end
+                it "redirects to the job posts index" do
+                    #THEN
+                    expect(response).to redirect_to(job_posts_path)
+                end
 
-            it "sets a flash message that it was deleted" do
-                expect(flash[:danger]).to be #asserts that the danger property of the flash object exists
+                it "sets a flash message that it was deleted" do
+                    expect(flash[:danger]).to be #asserts that the danger property of the flash object exists
+                end
+            end
+            context "as non owner" do
+                before do
+                    current_user = FactoryBot.create(:user)
+                    session[:user_id] = current_user.id #this is now the signed in user
+                    #this code will be run first before every single test within this describe block
+                    #GIVEN
+                    @job_post = FactoryBot.create(:job_post)
+                end
+                it "does not remove the job post" do
+                    #WHEN
+                    delete(:destroy, params: { id: @job_post.id })
+                    expect(JobPost.find(@job_post.id)).to eq(@job_post)
+                end
             end
         end
         context "with user not signed in" do

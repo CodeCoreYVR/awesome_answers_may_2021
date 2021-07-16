@@ -1,7 +1,7 @@
 class JobPostsController < ApplicationController
     # before_action :authenticate_user!, only: [:create]
     before_action :authenticate_user!, except: [:index, :show]
-    
+
     def new
         @job_post = JobPost.new
     end
@@ -52,8 +52,10 @@ class JobPostsController < ApplicationController
 
     def destroy
         job_post = JobPost.find params[:id]
-        job_post.destroy
-        flash[:danger] = "deleted job post"
-        redirect_to job_posts_path
+        if can?(:delete, job_post)
+            job_post.destroy
+            flash[:danger] = "deleted job post"
+            redirect_to job_posts_path
+        end
     end
 end
