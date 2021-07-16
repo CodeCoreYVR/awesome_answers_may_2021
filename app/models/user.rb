@@ -1,6 +1,7 @@
 class User < ApplicationRecord
     has_many :questions, dependent: :nullify
     has_many :answers, dependent: :nullify
+    has_many :job_posts, dependent: :nullify
 
     has_secure_password
     # What it needs
