@@ -7,7 +7,7 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 #To run this file use command: rails db:seed
-User.delete_all
+User.destroy_all
 Answer.destroy_all
 Question.destroy_all
 

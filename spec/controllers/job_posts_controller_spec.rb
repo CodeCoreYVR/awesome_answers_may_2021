@@ -168,16 +168,31 @@ RSpec.describe JobPostsController, type: :controller do
 
     describe "#edit" do
         context "with user signed in" do
-            before do 
-                session[:user_id] = FactoryBot.create(:user)
+            context "as owner" do
+                before do 
+                    current_user = FactoryBot.create(:user)
+                    session[:user_id] = current_user.id
+                    @job_post = FactoryBot.create(:job_post, user: current_user)
+                end
+                it "renders the edit template" do
+                    #GIVEN
+                    # job_post = FactoryBot.create(:job_post)
+                    #WHEN
+                    get(:edit, params: { id: @job_post.id })
+                    #THEN
+                    expect(response).to redirect_to root_path
+                end
             end
-            it "renders the edit template" do
-                #GIVEN
-                job_post = FactoryBot.create(:job_post)
-                #WHEN
-                get(:edit, params: { id: job_post.id })
-                #THEN
-                expect(response).to render_template :edit
+            context "as non owner" do
+                before do 
+                    current_user = FactoryBot.create(:user)
+                    session[:user_id] = current_user.id
+                    @job_post = FactoryBot.create(:job_post)
+                end
+                it "should redirect to show page" do
+                    get :edit, params: { id: @job_post.id }
+                    expect(response).to redirect_to root_path
+                end
             end
         end
         context "with user not signed in" do
@@ -185,8 +200,8 @@ RSpec.describe JobPostsController, type: :controller do
                 session[:user_id] = nil
             end
             it "should redirect to the sign in page" do 
-                job_post = FactoryBot.create(:job_post)
-                get(:edit, params: { id: job_post.id })
+                @job_post = FactoryBot.create(:job_post)
+                get(:edit, params: { id: @job_post.id })
                 expect(response).to redirect_to(new_sessions_path)
             end
         end

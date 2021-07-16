@@ -1,6 +1,7 @@
 class JobPostsController < ApplicationController
     # before_action :authenticate_user!, only: [:create]
     before_action :authenticate_user!, except: [:index, :show]
+    before_action :authorize_user!, only: [:edit, :destroy]
 
     def new
         @job_post = JobPost.new
@@ -33,7 +34,12 @@ class JobPostsController < ApplicationController
     end
 
     def edit
-
+        @job_post = JobPost.find params[:id]
+        if can?(:edit, @job_post)
+            render :edit
+        else
+            redirect_to job_post_path(@job_post)
+        end
     end
 
     def update
@@ -51,11 +57,19 @@ class JobPostsController < ApplicationController
     end
 
     def destroy
-        job_post = JobPost.find params[:id]
-        if can?(:delete, job_post)
-            job_post.destroy
+        @job_post = JobPost.find params[:id]
+        if can?(:destroy, @job_post)
+            @job_post.destroy
             flash[:danger] = "deleted job post"
             redirect_to job_posts_path
+        else
+            redirect_to root_path
         end
+    end
+
+    private
+
+    def authorize_user!
+        redirect_to root_path, alert: 'Not authorized! please try again' unless can?(:crud, @job_post)
     end
 end
