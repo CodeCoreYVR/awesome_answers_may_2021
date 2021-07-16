@@ -32,15 +32,15 @@ RSpec.describe JobPostsController, type: :controller do
     end
 
     describe "#create" do
+        def valid_request
+            post(:create, params: { job_post: FactoryBot.attributes_for(:job_post)})
+        end
         context "with user signed in" do
             #mimics user signed in - current user
             before do
                 session[:user_id]=FactoryBot.create(:user).id
             end
             context "with valid parameters" do
-                def valid_request
-                    post(:create, params: { job_post: FactoryBot.attributes_for(:job_post)})
-                end
                 it "creates a job post in the database" do
                     #GIVEN
                     count_before = JobPost.count #the numbner of all records in the JobPost table
@@ -102,6 +102,12 @@ RSpec.describe JobPostsController, type: :controller do
                     invalid_request
                     expect(response).to render_template(:new)
                 end
+            end
+        end
+        context "with user not signed in" do
+            it "should redirect to the sign in page" do
+                valid_request
+                expect(response).to redirect_to(new_sessions_path)
             end
         end
     end
