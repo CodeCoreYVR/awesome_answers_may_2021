@@ -32,6 +32,16 @@ class Question < ApplicationRecord
     #Association with USER MODEL
     belongs_to :user, optional: true
 
+    has_and_belongs_to_many(
+        :likes,
+        {
+            class_name: "User",
+            join_table: "likes",
+            association_foreign_key: "user_id",
+            foreign_key: "question_id"
+        }
+    )
+
     #--------------------VALIDATIONS------------------------------------>
     # Create validations by using the 'validates' method
     # The arguments are (in order):
