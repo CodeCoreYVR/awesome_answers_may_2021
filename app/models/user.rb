@@ -22,7 +22,7 @@ class User < ApplicationRecord
     # :association_foreign_key => on the join table, which foreign key points to
     #   the associated table
 
-    has_many: likes
+    has_many :likes
     has_many :liked_questions, through: :likes, source: :question
 
     has_secure_password
