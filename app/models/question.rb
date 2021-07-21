@@ -32,15 +32,22 @@ class Question < ApplicationRecord
     #Association with USER MODEL
     belongs_to :user, optional: true
 
-    has_and_belongs_to_many(
-        :likes,
-        {
-            class_name: "User",
-            join_table: "likes",
-            association_foreign_key: "user_id",
-            foreign_key: "question_id"
-        }
-    )
+    #The below association can only be used if the join table does not need a model
+    #However, without a Model it cannot change attributes, have controller actions, have validations, or callbacks
+    #It is discouraged to do it this way.
+    
+    # has_and_belongs_to_many(
+    #     :likes,
+    #     {
+    #         class_name: "User",
+    #         join_table: "likes",
+    #         association_foreign_key: "user_id",
+    #         foreign_key: "question_id"
+    #     }
+    # )
+
+    has_many: likes
+    has_many: :likers, through: :likes, source: :user
 
     #--------------------VALIDATIONS------------------------------------>
     # Create validations by using the 'validates' method
