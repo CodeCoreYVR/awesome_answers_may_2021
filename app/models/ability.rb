@@ -52,5 +52,13 @@ class Ability
       user == job_post.user
     end 
 
+    can(:like, Question) do |question|
+      user.persisted? && question.user != user
+    end
+
+    can(:destroy, Like) do |like|
+      like.user == user
+    end
+
   end
 end

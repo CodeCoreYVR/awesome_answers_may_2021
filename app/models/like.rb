@@ -8,7 +8,7 @@ class Like < ApplicationRecord
     validates(
         :question_id,
         uniqueness: {
-            scope: user_id,
+            scope: :user_id,
             message: "has already been liked"
         }
     )
