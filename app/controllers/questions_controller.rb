@@ -3,6 +3,12 @@ class QuestionsController < ApplicationController
     before_action :find_question, only: [:show, :edit, :update, :destroy]
     before_action :authorize_user!, only: [:edit, :update, :destroy]
 
+    #CRUD ACTIONS: 
+    #1. Create ( #new and #create )
+    #2. Read (#index and #show)
+    #3. Update (#edit and #update)
+    #4. Destroy (#destroy)
+
     def index
         @questions = Question.all.order(created_at: :desc) 
         #Model.all is a method built into active record used to return all records of that model
