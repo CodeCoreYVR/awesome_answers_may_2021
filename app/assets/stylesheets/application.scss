@@ -15,7 +15,10 @@
  */
 
  @import "bootstrap";
+ @import 'selectize';
+ @import 'selectize.bootstrap3';
 
+ 
  .answer-form {
      width: 100px;
      height: 200px;

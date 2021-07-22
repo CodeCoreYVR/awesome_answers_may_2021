@@ -13,6 +13,9 @@ ActiveStorage.start()
 import "bootstrap";
 import '../stylesheets/application'
 //import '../packs/question'
+import './selectize';
+window.jQuery = $;
+window.$ = $;
 
 console.log("Hello from app/javascript/packs/application.js")
 
