@@ -6,8 +6,8 @@ class Api::V1::QuestionsController < Api::ApplicationController
     # Make sure to inherit from the Api::ApplicationController instead of
     # ApplicationController
 
-    before_action :find_question, only: [:show, :destroy]
-    before_action :authenticate_user!, only: [ :create, :destroy ]
+    before_action :find_question, only: [:show, :destroy, :update]
+    before_action :authenticate_user!, only: [ :create, :destroy, :update ]
 
     def index
         #curl -H "Accept: application/json" http://localhost:3000api/v1/questions
@@ -35,6 +35,17 @@ class Api::V1::QuestionsController < Api::ApplicationController
             render(
                 json: { errors: question.errors.messages },
                 status: 422 #Unprocessable entity
+            )
+        end
+    end
+
+    def update
+        if @question.update question_params
+            render json: { id: @question.id }
+        else
+            render(
+                json: { errors: @question.errors.messages },
+                status: 422
             )
         end
     end
