@@ -83,7 +83,7 @@ class Api::V1::QuestionsController < Api::ApplicationController
         errors = invalid_record.errors.map do |field, message|
             {
                 type: error.class.to_s, #need it in string format
-                record_type: invalid_record.class.t_s,
+                record_type: invalid_record.class.to_s,
                 field: field,
                 message: message
             }
