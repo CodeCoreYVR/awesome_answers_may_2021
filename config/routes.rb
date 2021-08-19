@@ -77,7 +77,7 @@ Rails.application.routes.draw do
     get :liked, on: :collection
   end
 
-  resources :users, only:[:new, :create]
+  resources :users, only:[:new, :create, :show]
   resource :sessions, only:[:new, :create, :destroy]
   #resource generates CRUD for us; for sessions do not need /:id; cannot allow user to edit or show a particular session
   #when using a singular resource it will generate all the routes for us but without the 'id' option

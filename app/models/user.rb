@@ -1,4 +1,7 @@
 class User < ApplicationRecord
+    geocoded_by :address
+    after_validation :geocode
+    
     has_many :questions, dependent: :nullify
     has_many :answers, dependent: :nullify
     has_many :job_posts, dependent: :nullify
@@ -46,4 +49,5 @@ class User < ApplicationRecord
     def full_name
         "#{first_name} #{last_name}"
     end
+
 end
