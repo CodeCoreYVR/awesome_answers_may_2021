@@ -44,10 +44,33 @@ class User < ApplicationRecord
     # it will add a 'authenticate' method to verify user's password. if called with the correct password, it will return 'true' or 'false' based on if the password is correct or not
 
     VALID_EMAIL_REGEX = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
-    validates :email, presence: true, uniqueness: true, format: VALID_EMAIL_REGEX
+    validates :email, presence: true, uniqueness: true, format: VALID_EMAIL_REGEX, unless: :from_oauth?
 
     def full_name
         "#{first_name} #{last_name}"
+    end
+
+    def from_oauth?
+        uid.present? && provider.present?
+    end
+
+    def self.create_from_oauth(oauth_data)
+        name = oauth_data["info"]["name"]&.split || oauth_data["info"]["nickname"]
+        self.create(
+            first_name: name[0],
+            last_name: name[1] || "",
+            uid: oauth_data["uid"],
+            provider: oauth_data["provider"],
+            oauth_raw_data: oauth_data,
+            password: SecureRandom.hex(32)
+        )
+    end
+
+    def self.find_by_oauth(oauth_data)
+        self.find_by(
+            uid: oauth_data["uid"],
+            provider: oauth_data["provider"]
+        )
     end
 
 end

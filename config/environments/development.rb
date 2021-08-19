@@ -16,6 +16,9 @@ Rails.application.configure do
   config.stripe.debug_js = true
   config.stripe.publishable_key = 'publish_key from stripe.com'
 
+  #Host Authorization for Oauth middleware - clear whitelists
+  config.hosts.clear
+
   # Show full error reports.
   config.consider_all_requests_local = true
 
