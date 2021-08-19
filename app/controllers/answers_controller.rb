@@ -13,7 +13,7 @@ class AnswersController < ApplicationController
         
         @answer.save
         if @answer.persisted?
-            AnswerMailer.new_answer(@answer).deliver_now
+            # AnswerMailer.new_answer(@answer).deliver_now
             redirect_to question_path(@question), notice: 'Answer created!' 
         else
             redirect_to question_path(@question)  
@@ -21,12 +21,12 @@ class AnswersController < ApplicationController
     end
 
     def destroy
-        @question = Question.find params[:question_id]
+        # @question = Question.find params[:question_id]
         @answer = Answer.find params[:id]
 
         if can?(:crud, @answer)
             @answer.destroy
-            redirect_to question_path(@question), notice: 'Answer Deleted'
+            redirect_to question_path(@answer.question), notice: 'Answer Deleted'
         else
             redirect_to root_path, alert: "Not authorized!"
         end

@@ -11,6 +11,11 @@ Rails.application.configure do
   # Do not eager load code on boot.
   config.eager_load = false
 
+  #Stripe Configuration
+  #When we make a req to Stripe it will debug inside our console
+  config.stripe.debug_js = true
+  config.stripe.publishable_key = 'publish_key from stripe.com'
+
   # Show full error reports.
   config.consider_all_requests_local = true
 

@@ -12,6 +12,10 @@ Rails.application.configure do
   # Rake tasks automatically ignore this option for performance.
   config.eager_load = true
 
+  #Stripe Configuration
+  #When we make a req to Stripe it will debug inside our console
+  config.stripe.debug_js = false
+
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true

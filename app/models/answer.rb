@@ -8,7 +8,9 @@ class Answer < ApplicationRecord
   #Above is similar to: validates :question_id, presence: true
   #If youb want to disable this constraint, you can add "optional: true" to the belongs_to method
   # Primary Key: Any id / integer refering to the column in its own table is known as primary key
-  # Foreign Key: Any id that refers to the other table is known as foreign key 
+  # Foreign Key: Any id that refers to the other table is known as foreign key
+  
+  has_many :gifts, dependent: :destroy
   #--------------------------------------------------------------------------->
 
   #----------------------------Validations------------------------------------>
